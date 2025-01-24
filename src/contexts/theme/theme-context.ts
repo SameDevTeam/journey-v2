@@ -11,7 +11,7 @@ export interface ThemeProviderState {
 }
 
 export const ThemeProviderContext = createContext<ThemeProviderState>({
-  theme: 'light',
+  theme: 'dark',
   color: 'zinc',
   setTheme: () => null,
   setColor: () => null,
