@@ -2,6 +2,7 @@ import AppRouter from './routes'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary'
+import { ThemeProvider } from '@/contexts/theme'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,10 +16,12 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <GlobalErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AppRouter />
-        <Toaster position="top-right" richColors />
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AppRouter />
+          <Toaster position="top-right" richColors theme="system" />
+        </QueryClientProvider>
+      </ThemeProvider>
     </GlobalErrorBoundary>
   )
 }
