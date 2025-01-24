@@ -1,22 +1,24 @@
-import { Navigate, useLocation } from 'react-router-dom'
+import { Navigate, useLocation, Outlet } from 'react-router-dom'
 import { useAuthStore } from '@/stores/auth'
-import { useEffect } from 'react'
+import { useUser } from '@/hooks/auth'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
-interface ProtectedRouteProps {
-  children: React.ReactNode
-}
-
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, checkAuth } = useAuthStore()
+export function ProtectedRoute() {
+  const { isAuthenticated } = useAuthStore()
   const location = useLocation()
+  const { isLoading } = useUser()
 
-  useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[80vh] items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    )
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  return children
+  return <Outlet />
 } 

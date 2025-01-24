@@ -1,42 +1,71 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { useAuthStore } from '@/stores/auth'
+import { useNavigate } from 'react-router-dom'
+
+interface User {
+  id: number
+  email: string
+  name: string
+  lastname: string
+  createdOn: string
+  modifiedOn: string
+  lastLoginDate: string
+  image?: string
+}
+
+interface ApiResponse<T> {
+  data: T
+  errorCode: number
+  errorMessage: string
+  hasError: boolean
+}
 
 export function useUser() {
+  const { setUser } = useAuthStore()
+
   return useQuery({
     queryKey: ['user'],
     queryFn: async () => {
-      const { data } = await api.get('/auth/me')
-      return data
+      const { data } = await api.get<ApiResponse<User>>('/me')
+      if (data.hasError) {
+        setUser(null)
+        return null
+      }
+      setUser(data.data)
+      return data.data
     },
     retry: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false
   })
 }
 
 export function useLogin() {
-  const queryClient = useQueryClient()
-  const { login } = useAuthStore()
+  const { setUser } = useAuthStore()
 
   return useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
-      await login(credentials.email, credentials.password)
+      const { data } = await api.post<ApiResponse<User>>('/login', credentials)
+      return data.data
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user'] })
+    onSuccess: (data) => {
+      setUser(data)
     },
   })
 }
 
 export function useLogout() {
-  const queryClient = useQueryClient()
-  const { logout } = useAuthStore()
+  const { setUser } = useAuthStore()
+  const navigate = useNavigate()
 
   return useMutation({
     mutationFn: async () => {
-      await logout()
+      await api.get<ApiResponse<void>>('/logout')
     },
     onSuccess: () => {
-      queryClient.clear()
+      setUser(null)
+      navigate('/login')
     },
   })
 } 

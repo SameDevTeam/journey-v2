@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ThemeProviderContext } from './theme-context'
-
-type Theme = 'dark' | 'light'
+import { ThemeProviderContext, Theme, Color } from './theme-context'
 
 interface ThemeProviderProps {
   children: React.ReactNode
@@ -15,6 +13,13 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     return 'light'
   })
 
+  const [color, setColor] = useState<Color>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('color') as Color) || 'zinc'
+    }
+    return 'zinc'
+  })
+
   useEffect(() => {
     const root = window.document.documentElement
     root.classList.remove('light', 'dark')
@@ -22,8 +27,16 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     localStorage.setItem('theme', theme)
   }, [theme])
 
+  useEffect(() => {
+    const root = window.document.documentElement
+    const colors: Color[] = ['zinc', 'red', 'rose', 'orange', 'green', 'blue', 'yellow', 'violet']
+    colors.forEach(c => root.classList.remove(c))
+    root.classList.add(color)
+    localStorage.setItem('color', color)
+  }, [color])
+
   return (
-    <ThemeProviderContext.Provider value={{ theme, setTheme }}>
+    <ThemeProviderContext.Provider value={{ theme, color, setTheme, setColor }}>
       {children}
     </ThemeProviderContext.Provider>
   )
