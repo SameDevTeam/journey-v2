@@ -7,6 +7,8 @@ import {
 
 import { NavProjects } from "@/components/sidebar/nav-projects"
 import { NavUser } from "@/components/sidebar/nav-user"
+import { useAuthStore } from "@/stores/auth"
+import { useLogout } from "@/hooks/auth"
 
 import {
   Sidebar,
@@ -20,8 +22,6 @@ import {
 } from "@/components/ui/sidebar"
 
 import SameupLogo from '@/assets/images/sameup-logo-2.png'
-import { useUser } from "@/hooks/use-user"
-
 
 // This is sample data.
 const data = {
@@ -82,8 +82,8 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-
-  const { user, logout } = useUser()
+  const { user } = useAuthStore()
+  const logout = useLogout()
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -108,7 +108,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} onLogout={logout} />
+        <NavUser user={user} onLogout={() => logout.mutate()} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

@@ -27,17 +27,23 @@ export function useUser() {
   return useQuery({
     queryKey: ['user'],
     queryFn: async () => {
-      const { data } = await api.get<ApiResponse<User>>('/me')
-      if (data.hasError) {
+      try {
+        const { data } = await api.get<ApiResponse<User>>('/me')
+        if (data.hasError) {
+          setUser(null)
+          return null
+        }
+        setUser(data.data)
+        return data.data
+      } catch (error) {
         setUser(null)
-        return null
+        throw error
       }
-      setUser(data.data)
-      return data.data
     },
     retry: false,
-    refetchOnMount: true,
-    refetchOnWindowFocus: false
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
 
