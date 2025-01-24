@@ -1,19 +1,36 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { ProtectedRoute } from './ProtectedRoute'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
-import { ErrorBoundary } from '@/components/error/ErrorBoundary'
 import { PublicRoute } from './PublicRoute.tsx'
+import { ErrorBoundary } from '@/components/error/ErrorBoundary'
+import { useUser } from '@/hooks/auth'
 
-const Login = lazy(() => import('@/components/auth/LoginForm'))
+const Login = lazy(() => import('@/components/auth/page'))
 const Dashboard = lazy(() => import('@/components/dashboard/Dashboard'))
 const NotFound = lazy(() => import('@/components/error/NotFound'))
 
+function AuthCheck({ children }: { children: React.ReactNode }) {
+  const { isLoading } = useUser()
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    )
+  }
+
+  return children
+}
+
 const router = createBrowserRouter([
   {
-    element: <MainLayout />,
     errorElement: <ErrorBoundary />,
+    element: <AuthCheck>
+      <Outlet />
+    </AuthCheck>,
     children: [
       {
         path: '/login',
@@ -24,11 +41,17 @@ const router = createBrowserRouter([
         )
       },
       {
-        element: <ProtectedRoute />,
+        path: '/',
+        element: <MainLayout />,
         children: [
           {
-            path: '/',
-            element: <Dashboard />
+            element: <ProtectedRoute />,
+            children: [
+              {
+                index: true,
+                element: <Dashboard />
+              }
+            ]
           }
         ]
       },
