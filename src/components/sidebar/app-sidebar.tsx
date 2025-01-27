@@ -96,7 +96,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <img src={SameupLogo} className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">SameUp CMS</span>
+                  <span className="font-semibold">SameUp Journey</span>
                 </div>
               </a>
             </SidebarMenuButton>

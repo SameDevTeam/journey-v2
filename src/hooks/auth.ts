@@ -35,14 +35,15 @@ export function useUser() {
         }
         setUser(data.data)
         return data.data
-      } catch (error) {
+      } catch {
         setUser(null)
-        throw error
+        return null
       }
     },
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }

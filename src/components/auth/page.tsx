@@ -1,4 +1,5 @@
 import SameupLogo from '@/assets/images/sameup-logo-2.png'
+import JourneyImage from '@/assets/images/journey.png'
 
 import { LoginForm } from "@/components/auth/login-form"
 
@@ -11,7 +12,7 @@ export function LoginPage() {
             <div className="flex h-6 w-6 items-center justify-center rounded-md text-primary-foreground">
               <img src={SameupLogo} className="size-4" />
             </div>
-            SameUp CMS
+            SameUp Journey
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -20,11 +21,11 @@ export function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-muted lg:block">
+      <div className="relative hidden bg-background lg:block">
         <img
-          src={SameupLogo}
+          src={JourneyImage}
           alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
     </div>

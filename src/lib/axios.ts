@@ -12,8 +12,11 @@ export const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message = error.response?.data?.message || 'Something went wrong'
-    toast.error(message)
+    // Don't show toast for 401 errors
+    if (error.response?.status !== 401) {
+      const message = error.response?.data?.message || 'Something went wrong'
+      toast.error(message)
+    }
     return Promise.reject(error)
   }
 ) 
