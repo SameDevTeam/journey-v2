@@ -1,13 +1,13 @@
 import {
   type LucideIcon,
 } from "lucide-react"
+import { Link } from "react-router-dom"
 
 import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-
 } from "@/components/ui/sidebar"
 
 export function NavProjects({
@@ -19,7 +19,6 @@ export function NavProjects({
     icon: LucideIcon
   }[]
 }) {
-
   return (
     <SidebarGroup>
       {/* <SidebarGroupLabel>Projects</SidebarGroupLabel> */}
@@ -27,10 +26,10 @@ export function NavProjects({
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
-              {item.icon && <item.icon />}
+              <Link to={item.url}>
+                {item.icon && <item.icon />}
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}

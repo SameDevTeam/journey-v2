@@ -3,6 +3,7 @@ import {
   Frame,
   Map,
   PieChart,
+  FileIcon,
 } from "lucide-react"
 
 import { NavProjects } from "@/components/sidebar/nav-projects"
@@ -75,8 +76,8 @@ const data = {
     },
     {
       name: "Dosya Yönetimi",
-      url: "#",
-      icon: Map,
+      url: "/file-management",
+      icon: FileIcon,
     },
   ],
 }

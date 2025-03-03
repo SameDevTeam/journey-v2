@@ -23,11 +23,5 @@ export function MainLayout({ children }: MainLayoutProps) {
         {children || <Outlet />}
       </main>
     </SidebarProvider>
-    // <div className="min-h-screen bg-background text-foreground">
-    //   <Navbar />
-    //   <main className="container mx-auto px-4 py-8">
-    //     {children || <Outlet />}
-    //   </main>
-    // </div>
   )
 } 

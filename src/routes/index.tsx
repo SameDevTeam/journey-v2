@@ -10,6 +10,7 @@ import { useUser } from '@/hooks/auth'
 const Login = lazy(() => import('@/components/auth/page'))
 const Dashboard = lazy(() => import('@/components/dashboard/Dashboard'))
 const NotFound = lazy(() => import('@/components/error/NotFound'))
+const FileManagement = lazy(() => import('@/components/file-management/page'))
 
 function AuthCheck({ children }: { children: React.ReactNode }) {
   const { isLoading } = useUser()
@@ -50,6 +51,14 @@ const router = createBrowserRouter([
               {
                 index: true,
                 element: <Dashboard />
+              },
+              {
+                path: 'file-management',
+                element: <FileManagement />,
+              },
+              {
+                path: 'file-management/*',
+                element: <FileManagement />
               }
             ]
           }
