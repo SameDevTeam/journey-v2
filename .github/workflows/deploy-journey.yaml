@@ -78,5 +78,5 @@ jobs:
           SLACK_MESSAGE: "${{ job.status == 'success' && 'Successfully deployed to' || 'Failed to deploy to' }} ${{ github.ref == 'refs/heads/main' ? 'production' : 'development' }} environment"
           SLACK_FOOTER: "GitHub Actions Workflow"
           MSG_MINIMAL: false
-          SLACK_USERNAME: GitHub Actions
-          SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png 
+          SLACK_USERNAME: "GitHub Actions"
+          SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" 
