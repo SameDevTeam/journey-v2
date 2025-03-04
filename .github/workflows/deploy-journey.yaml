@@ -62,8 +62,8 @@ jobs:
           server: ftp.sameup.dev
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ${{ github.ref == 'refs/heads/main' ? './dist/' : './dist/' }}
-          server-dir: ${{ github.ref == 'refs/heads/main' ? '/v2.admin.journey.sameup.dev/' : '/v2.admin.journey.sameup.dev/' }}
+          local-dir: "./dist/"
+          server-dir: "/v2.admin.journey.sameup.dev/"
           dangerous-clean-slate: ${{ github.ref == 'refs/heads/main' }}
           dry-run: false
       
