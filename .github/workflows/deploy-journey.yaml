@@ -73,6 +73,25 @@ jobs:
             **/node_modules/**
           dry-run: false
       
+      # Verify web.config is properly deployed
+      - name: Verify Deployment
+        run: |
+          echo "Verifying web.config deployment..."
+          # Check if web.config exists in the build directory
+          if [ -f "./dist/web.config" ]; then
+            echo "✅ web.config exists in build directory"
+          else
+            echo "⚠️ web.config not found in build directory!"
+            echo "Creating web.config in build directory..."
+            cp ./public/web.config ./dist/web.config || echo "Failed to copy web.config"
+          fi
+          
+          # Upload web.config separately to ensure it's properly deployed
+          echo "Uploading web.config separately to ensure proper deployment..."
+          curl -T ./dist/web.config -u ${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }} ftp://ftp.sameup.dev/v2.admin.journey.sameup.dev/web.config
+          
+          echo "Deployment verification completed"
+      
       - name: Notify Deployment Status
         if: always()
         uses: rtCamp/action-slack-notify@v2
