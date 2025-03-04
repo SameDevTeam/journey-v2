@@ -28,7 +28,7 @@ jobs:
       name: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
     
     env:
-      VITE_DOMAIN: ${{ vars.VITE_DOMAIN || 'https://api.journey.sameup.dev' }}
+      VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.journey.sameup.dev' }}
       VITE_PREVIEW: ${{ vars.VITE_PREVIEW || 'https://preview.journey.sameup.dev' }}
     
     steps:
@@ -53,7 +53,7 @@ jobs:
       - name: Build Application
         run: npm run build
         env:
-          VITE_DOMAIN: ${{ env.VITE_DOMAIN }}
+          VITE_API_URL: ${{ env.VITE_API_URL }}
           VITE_PREVIEW: ${{ env.VITE_PREVIEW }}
       
       - name: Deploy to Server
