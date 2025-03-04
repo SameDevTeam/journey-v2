@@ -10,4 +10,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: 'dist',
+    // Ensure all assets from public folder are copied to build output
+    assetsDir: 'assets',
+    rollupOptions: {
+      // Ensure web.config is properly handled
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 })

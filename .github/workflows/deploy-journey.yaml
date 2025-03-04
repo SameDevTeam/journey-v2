@@ -67,6 +67,10 @@ jobs:
           local-dir: "./dist/"
           server-dir: "/v2.admin.journey.sameup.dev/"
           dangerous-clean-slate: ${{ github.ref == 'refs/heads/main' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
           dry-run: false
       
       - name: Notify Deployment Status
