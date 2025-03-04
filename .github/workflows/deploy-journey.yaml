@@ -75,7 +75,7 @@ jobs:
           SLACK_CHANNEL: deployments
           SLACK_COLOR: ${{ job.status }}
           SLACK_TITLE: "Journey Deployment Status"
-          SLACK_MESSAGE: "${{ job.status == 'success' && 'Successfully deployed to' || 'Failed to deploy to' }} ${{ github.ref == 'refs/heads/main' ? 'production' : 'development' }} environment"
+          SLACK_MESSAGE: "${{ job.status == 'success' && 'Successfully deployed to' || 'Failed to deploy to' }} ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }} environment"
           SLACK_FOOTER: "GitHub Actions Workflow"
           MSG_MINIMAL: false
           SLACK_USERNAME: "GitHub Actions"
