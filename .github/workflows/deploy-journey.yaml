@@ -1,0 +1,82 @@
+name: Deploy Journey Application
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+env:
+  NODE_VERSION: 18
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
+    
+    env:
+      VITE_DOMAIN: ${{ vars.VITE_DOMAIN || 'https://api.journey.sameup.dev' }}
+      VITE_PREVIEW: ${{ vars.VITE_PREVIEW || 'https://preview.journey.sameup.dev' }}
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Lint
+        run: npm run lint
+        continue-on-error: true
+      
+      - name: Build Application
+        run: npm run build
+        env:
+          VITE_DOMAIN: ${{ env.VITE_DOMAIN }}
+          VITE_PREVIEW: ${{ env.VITE_PREVIEW }}
+      
+      - name: Deploy to Server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.sameup.dev
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ${{ github.ref == 'refs/heads/main' ? './dist/' : './dist/' }}
+          server-dir: ${{ github.ref == 'refs/heads/main' ? '/v2.admin.journey.sameup.dev/' : '/v2.admin.journey.sameup.dev/' }}
+          dangerous-clean-slate: ${{ github.ref == 'refs/heads/main' }}
+          dry-run: false
+      
+      - name: Notify Deployment Status
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: deployments
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: "Journey Deployment Status"
+          SLACK_MESSAGE: "${{ job.status == 'success' && 'Successfully deployed to' || 'Failed to deploy to' }} ${{ github.ref == 'refs/heads/main' ? 'production' : 'development' }} environment"
+          SLACK_FOOTER: "GitHub Actions Workflow"
+          MSG_MINIMAL: false
+          SLACK_USERNAME: GitHub Actions
+          SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png 
