@@ -28,7 +28,8 @@ jobs:
       name: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
     
     env:
-      VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.journey.sameup.dev' }}
+      VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.aktifportfoy.sameup.dev' }}
+      VITE_API_BASE_PATH: ${{ vars.VITE_API_BASE_PATH || '/api/v1' }}
       VITE_PREVIEW: ${{ vars.VITE_PREVIEW || 'https://preview.journey.sameup.dev' }}
     
     steps:
@@ -54,6 +55,7 @@ jobs:
         run: npm run build
         env:
           VITE_API_URL: ${{ env.VITE_API_URL }}
+          VITE_API_BASE_PATH: ${{ env.VITE_API_BASE_PATH }}
           VITE_PREVIEW: ${{ env.VITE_PREVIEW }}
       
       - name: Deploy to Server
